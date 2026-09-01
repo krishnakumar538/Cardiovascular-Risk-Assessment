@@ -9,6 +9,16 @@ Run with:
     pip install flask flask-cors scikit-learn pandas joblib
     python app.py
 """
+import pandas as pd
+
+df = pd.read_csv("cardio_train.csv")
+
+# Remove rows where target value is missing
+df = df.dropna(subset=["cardio"])
+
+# Features and target
+X = df.drop(columns=["cardio"])
+y = df["cardio"]
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
