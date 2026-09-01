@@ -20,6 +20,53 @@ df = df.dropna(subset=["cardio"])
 X = df.drop(columns=["cardio"])
 y = df["cardio"]
 
+from sklearn.impute import SimpleImputer
+
+imputer = SimpleImputer(strategy="median")
+X = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+# Load dataset
+df = pd.read_csv("cardio_train.csv")
+
+# Remove rows with missing target
+df = df.dropna(subset=["cardio"])
+
+# Separate X and y
+X = df.drop(columns=["cardio"])
+y = df["cardio"]
+
+# Fill missing feature values
+imputer = SimpleImputer(strategy="median")
+X = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+clf = LogisticRegression(max_iter=1000)
+clf.fit(X_train, y_train)
+
+print("Model trained successfully!")
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Cardio Prediction API is running!"
+
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+df = df.dropna(subset=["cardio"])
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
